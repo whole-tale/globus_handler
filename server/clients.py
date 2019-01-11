@@ -7,7 +7,7 @@ from globus_sdk import RefreshTokenAuthorizer, AccessTokenAuthorizer, Confidenti
 from girder.plugins.oauth.constants import PluginSettings as OAuthPluginSettings
 from girder.models.setting import Setting
 
-from ....constants import GlobusEnvironmentVariables
+from .constants import GlobusEnvironmentVariables
 
 _TRANSFER_SCOPE = 'urn:globus:auth:scope:transfer.api.globus.org:all'
 _APP_TOKEN_VALIDITY_MARGIN = 60

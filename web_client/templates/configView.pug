@@ -1,0 +1,18 @@
+.g-config-breadcrumb-container
+
+#g-wt-dm-options.panel-group
+  .panel.panel-default
+    .panel-heading
+      .panel-title WholeTale Globus Handler Configuration
+      .panel-body
+        form#g-wt-dm-config-form.g-wt-dm-config-form(role="form")
+          .form-group
+            label.control-label(for="g-wt-dm-globus-root-path") Globus Root Path
+            input#g-wt-dm-globus-root-path.input-sm.form-control(
+                type="text", placeholder="Globus Root Path")
+          .form-group
+            label.control-label(for="g-wt-dm-globus-gc-dir") Globus Connect Directory
+            input#g-wt-dm-globus-gc-dir.input-sm.form-control(
+                type="text", placeholder="Globus Connect Directory")
+          p#g-wt-dm-config-error-message.g-validation-failed-message()
+          input.btn.btn-sm.btn-primary(type="submit", value="Save")

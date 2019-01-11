@@ -1,5 +1,5 @@
 from girder.models.setting import Setting
-from ....constants import PluginSettings, GlobusEnvironmentVariables
+from .constants import PluginSettings, GlobusEnvironmentVariables
 from girder import logger
 import os
 import uuid

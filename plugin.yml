@@ -1,5 +1,5 @@
 name: Globus Handler
 description: WholeTale plugin for handling Globus Transfers
-version: 0.8.0
+version: 0.7.0
 dependencies:
     - oauth

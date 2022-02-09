@@ -24,7 +24,7 @@ class Clients:
     def getTransferClient(self, check: bool = False):
         if self.transferClient is None:
             authz = self.getAppTransferAuthorizer()
-            self.transferClient = TransferClient(authz)
+            self.transferClient = TransferClient(authorizer=authz)
             if check:
                 # almost dummy call as a sanity check
                 self.transferClient.task_list(num_results=1)
@@ -36,7 +36,7 @@ class Clients:
         authz = self.getAuthorizer(user)
         with self.userClientsLock:
             if username not in self.userClients:
-                self.userClients[username] = TransferClient(authz)
+                self.userClients[username] = TransferClient(authorizer=authz)
             return self.userClients[username]
 
     def getAuthorizer(self, user):

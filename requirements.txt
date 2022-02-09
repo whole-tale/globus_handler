@@ -1,1 +1,1 @@
-globus-sdk
+globus-sdk~=3.3.1

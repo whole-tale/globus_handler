@@ -1,9 +1,10 @@
+import $ from 'jquery';
 import _ from 'underscore';
 
-import PluginConfigBreadcrumbWidget from 'girder/views/widgets/PluginConfigBreadcrumbWidget';
-import View from 'girder/views/View';
-import { apiRoot, restRequest } from 'girder/rest';
-import events from 'girder/events';
+import PluginConfigBreadcrumbWidget from '@girder/core/views/widgets/PluginConfigBreadcrumbWidget';
+import View from '@girder/core/views/View';
+import { getApiRoot, restRequest } from '@girder/core/rest';
+import events from '@girder/core/events';
 
 import ConfigViewTemplate from '../templates/configView.pug';
 import '../stylesheets/configView.styl';
@@ -27,12 +28,11 @@ var ConfigView = View.extend({
     initialize: function () {
         restRequest({
             type: 'GET',
-            path: 'system/setting',
+            url: 'system/setting',
             data: {
                 list: JSON.stringify(this.SETTING_KEYS)
             }
         }).done(_.bind(function (resp) {
-            console.log('Settings: ', resp);
             this.settingVals = resp;
             this.render();
         }, this));
@@ -49,10 +49,10 @@ var ConfigView = View.extend({
 
     render: function () {
         var origin = window.location.protocol + '//' + window.location.host;
-        var _apiRoot = apiRoot;
+        var _apiRoot = getApiRoot();
 
-        if (apiRoot.substring(0, 1) !== '/') {
-            _apiRoot = '/' + apiRoot;
+        if (_apiRoot.substring(0, 1) !== '/') {
+            _apiRoot = '/' + _apiRoot;
         }
 
         this.$el.html(ConfigViewTemplate({
@@ -81,21 +81,21 @@ var ConfigView = View.extend({
     _saveSettings: function (settings) {
         restRequest({
             type: 'PUT',
-            path: 'system/setting',
+            url: 'system/setting',
             data: {
                 list: JSON.stringify(settings)
             },
             error: null
-        }).done(_.bind(function () {
+        }).done(() => {
             events.trigger('g:alert', {
                 icon: 'ok',
                 text: 'Settings saved.',
                 type: 'success',
                 timeout: 3000
             });
-        }, this)).error(_.bind(function (resp) {
+        }).fail((resp) => {
             this.$('#g-wt-dm-config-error-message').text(resp.responseJSON.message);
-        }, this));
+        });
     }
 });
 

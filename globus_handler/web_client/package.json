@@ -1,0 +1,21 @@
+{
+    "name": "@girder/globus-handler",
+    "version": "2.0.0",
+    "description": "WholeTale plugin for handling Globus Transfers.",
+    "license": "Apache-2.0",
+    "peerDepencencies": {
+        "@girder/core": "*"
+    },
+    "bugs": {
+        "url": "https://github.com/whole-tale/globus_handler/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/whole-tale/globus_handler.git"
+    },
+    "dependencies": {},
+    "girderPlugin": {
+        "name": "globus_handler",
+        "main": "./main.js"
+    }
+}

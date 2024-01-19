@@ -1,17 +1,21 @@
 import os
 from threading import RLock
 
-from globus_sdk import RefreshTokenAuthorizer, AccessTokenAuthorizer, ConfidentialAppAuthClient, \
-    TransferClient, ClientCredentialsAuthorizer
-
-from girder.plugins.oauth.constants import PluginSettings as OAuthPluginSettings
 from girder.models.setting import Setting
+from girder_oauth.constants import PluginSettings as OAuthPluginSettings
+from globus_sdk import (
+    AccessTokenAuthorizer,
+    ClientCredentialsAuthorizer,
+    ConfidentialAppAuthClient,
+    RefreshTokenAuthorizer,
+    TransferClient,
+)
 
 from .constants import GlobusEnvironmentVariables
 
-_TRANSFER_SCOPE = 'urn:globus:auth:scope:transfer.api.globus.org:all'
+_TRANSFER_SCOPE = "urn:globus:auth:scope:transfer.api.globus.org:all"
 _APP_TOKEN_VALIDITY_MARGIN = 60
-_APP_SCOPES = ['urn:globus:auth:scope:transfer.api.globus.org:all']
+_APP_SCOPES = ["urn:globus:auth:scope:transfer.api.globus.org:all"]
 
 
 class Clients:
@@ -32,7 +36,7 @@ class Clients:
         return self.transferClient
 
     def getUserTransferClient(self, user):
-        username = user['login']
+        username = user["login"]
         authz = self.getAuthorizer(user)
         with self.userClientsLock:
             if username not in self.userClients:
@@ -40,20 +44,21 @@ class Clients:
             return self.userClients[username]
 
     def getAuthorizer(self, user):
-        if 'otherTokens' not in user:
-            raise Exception('No transfer token found')
+        if "otherTokens" not in user:
+            raise Exception("No transfer token found")
 
-        tokens = user['otherTokens']
+        tokens = user["otherTokens"]
 
         for token in tokens:
-            if token['scope'] == _TRANSFER_SCOPE:
-                if 'refresh_token' in token and token['refresh_token'] is not None:
-                    return RefreshTokenAuthorizer(token['refresh_token'],
-                                                  self.getAuthClient())
+            if token["scope"] == _TRANSFER_SCOPE:
+                if "refresh_token" in token and token["refresh_token"] is not None:
+                    return RefreshTokenAuthorizer(
+                        token["refresh_token"], self.getAuthClient()
+                    )
                 else:
-                    return AccessTokenAuthorizer(token['access_token'])
+                    return AccessTokenAuthorizer(token["access_token"])
 
-        raise Exception('No globus transfer token found')
+        raise Exception("No globus transfer token found")
 
     def getAuthClient(self):
         if self.authClient is None:
@@ -75,16 +80,20 @@ class Clients:
         return ClientCredentialsAuthorizer(authClient, _APP_SCOPES)
 
     def getGlobusAdminToken(self):
-        if 'GLOBUS_ADMIN_TOKEN' in os.environ:
-            return os.environ['GLOBUS_ADMIN_TOKEN']
+        if "GLOBUS_ADMIN_TOKEN" in os.environ:
+            return os.environ["GLOBUS_ADMIN_TOKEN"]
 
     def getGlobusClientId(self):
-        return self._getGlobusSetting(GlobusEnvironmentVariables.GLOBUS_CLIENT_ID,
-                                      OAuthPluginSettings.GLOBUS_CLIENT_ID)
+        return self._getGlobusSetting(
+            GlobusEnvironmentVariables.GLOBUS_CLIENT_ID,
+            OAuthPluginSettings.GLOBUS_CLIENT_ID,
+        )
 
     def getGlobusClientSecret(self):
-        return self._getGlobusSetting(GlobusEnvironmentVariables.GLOBUS_CLIENT_SECRET,
-                                      OAuthPluginSettings.GLOBUS_CLIENT_SECRET)
+        return self._getGlobusSetting(
+            GlobusEnvironmentVariables.GLOBUS_CLIENT_SECRET,
+            OAuthPluginSettings.GLOBUS_CLIENT_SECRET,
+        )
 
     def _getGlobusSetting(self, envVarName, settingName):
         # allow environment variables to override stored settings. Use carefully since
@@ -94,6 +103,8 @@ class Clients:
 
         value = Setting().get(settingName, None)
         if value is None:
-            raise Exception('Missing configuration setting "%s" (env "%s")' %
-                            (settingName, envVarName))
+            raise Exception(
+                'Missing configuration setting "%s" (env "%s")'
+                % (settingName, envVarName)
+            )
         return value

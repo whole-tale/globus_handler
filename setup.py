@@ -19,7 +19,9 @@ setup(
     setup_requires=["setuptools-git"],
     install_requires=["girder>=3", "girder-oauth", "globus-sdk~=3.3.1"],
     entry_points={
-        "girder.plugin": ["globus_handler = globus_handler:GlobusHandlerPlugin"]
+        "girder.plugin": [
+            "girder_globus_handler = girder_globus_handler:GlobusHandlerPlugin"
+        ]
     },
     zip_safe=False,
 )
